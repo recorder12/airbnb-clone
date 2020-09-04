@@ -73,14 +73,14 @@ class Room(core_models.TimeStampedModel):
     check_out = models.TimeField()
     instant_book = models.BooleanField(default=False)
     host = models.ForeignKey(
-        "users.User", on_delete=models.CASCADE
+        "users.User", related_name="rooms", on_delete=models.CASCADE
     )  # Connection between user and room, one-to-many connection
     room_type = models.ForeignKey(
-        "RoomType", on_delete=models.SET_NULL, null=True
+        "RoomType", related_name="rooms", on_delete=models.SET_NULL, null=True
     )  # Room type shoule be one. room type can be null
-    amenities = models.ManyToManyField("Amenity", blank=True)
-    facilities = models.ManyToManyField("Facility", blank=True)
-    house_rules = models.ManyToManyField("HouseRule", blank=True)
+    amenities = models.ManyToManyField("Amenity", related_name="rooms", blank=True)
+    facilities = models.ManyToManyField("Facility", related_name="rooms", blank=True)
+    house_rules = models.ManyToManyField("HouseRule", related_name="rooms", blank=True)
 
     def __str__(self):
         return self.name
@@ -93,7 +93,7 @@ class Photo(core_models.TimeStampedModel):
     caption = models.CharField(max_length=80)
     file = models.ImageField()
     room = models.ForeignKey(
-        "Room", on_delete=models.CASCADE
+        "Room", related_name="photos", on_delete=models.CASCADE
     )  # Django can understand string
 
     def __str__(self):
